@@ -392,6 +392,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
       heroTag: "mapRotation",
       backgroundColor: primaryColor,
       foregroundColor: secondaryColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(labelRoundness))),
       onPressed: () {
         setState(() {
           mapControllerRotationRad = 0;
@@ -420,6 +421,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
       heroTag: "myLocation",
       backgroundColor: primaryColor,
       foregroundColor: secondaryColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(labelRoundness))),
       onPressed: () {
         _liveUpdate = !_liveUpdate;
         if (_liveUpdate) {

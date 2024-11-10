@@ -44,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
           markerSize: 80,
           buttonSize: 50,
           labelHeight: 60,
-          labelRoundness: 20,
+          labelRoundness: 50,
 
           // Text customization
           searchHintText: "Search location...",
