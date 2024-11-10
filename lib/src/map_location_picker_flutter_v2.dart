@@ -51,7 +51,7 @@ class MapLocationPickerV2 extends StatefulWidget {
   final Function(String)? onSearchTextChanged;
 
   const MapLocationPickerV2({
-    Key? key,
+    super.key,
     this.initialLocation,
     this.initialZoom,
     this.maxZoom,
@@ -78,7 +78,7 @@ class MapLocationPickerV2 extends StatefulWidget {
     this.onLocationSelected,
     this.onMapMove,
     this.onSearchTextChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() => MapLocationPickerV2State();
@@ -262,7 +262,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
         mapControllerRotationRad = transform360to180(mapController.camera.rotation % 360) * 0.01745329252;
       });
 
-      final currentPosition = position.center!;
+      final currentPosition = position.center;
       if (widget.onMapMove != null) {
         widget.onMapMove!(LatLng(currentPosition.latitude, currentPosition.longitude));
       }
@@ -406,7 +406,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
         builder: (context, rotation, child) {
           return Transform.rotate(
             angle: rotation,
-            child: Icon(
+            child: const Icon(
               Icons.navigation,
               size: 30,
             ),
@@ -428,7 +428,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
           gotoMyLocation();
         }
       },
-      child: Icon(Icons.my_location),
+      child: const Icon(Icons.my_location),
     );
   }
 
@@ -437,8 +437,8 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
       constraints: BoxConstraints.tightFor(width: buttonSize, height: labelHeight),
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(primaryColor),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          backgroundColor: WidgetStateProperty.all(primaryColor),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(labelRoundness),
@@ -447,7 +447,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
             ),
           ),
           // Add padding to remove default padding
-          padding: MaterialStateProperty.all(EdgeInsets.zero),
+          padding: WidgetStateProperty.all(EdgeInsets.zero),
         ),
         onPressed: () {
           if (_locationResult.coordinates != null && !isLoading) {
@@ -479,8 +479,8 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
         }
         Navigator.pop(context, null);
       },
-      child: Padding(
-        padding: const EdgeInsets.only(left: 10),
+      child: const Padding(
+        padding: EdgeInsets.only(left: 10),
         child: Icon(
           Icons.arrow_back_ios,
           size: 30,
@@ -524,9 +524,9 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
   void animatedMapMove(LatLng destLocation, double destZoom) {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
-    final _latTween = Tween<double>(begin: mapController.camera.center.latitude, end: destLocation.latitude);
-    final _lngTween = Tween<double>(begin: mapController.camera.center.longitude, end: destLocation.longitude);
-    final _zoomTween = Tween<double>(begin: mapController.camera.zoom, end: destZoom);
+    final latTween = Tween<double>(begin: mapController.camera.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(begin: mapController.camera.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: mapController.camera.zoom, end: destZoom);
 
     // Create a animation controller that has a duration and a TickerProvider.
     var controller = AnimationController(duration: widget.mapMoveDuration ?? defaultMapMoveDuration, vsync: this);
@@ -535,7 +535,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
     Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
-      mapController.move(LatLng(_latTween.evaluate(animation), _lngTween.evaluate(animation)), _zoomTween.evaluate(animation));
+      mapController.move(LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)), zoomTween.evaluate(animation));
     });
 
     animation.addStatusListener((status) {
@@ -606,12 +606,12 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
   }
 
   void animatedMapRotationReset() {
-    final _rotationTween = Tween<double>(begin: transform360to180(mapController.camera.rotation % 360), end: 0);
+    final rotationTween = Tween<double>(begin: transform360to180(mapController.camera.rotation % 360), end: 0);
     var controller = AnimationController(duration: widget.rotationResetDuration ?? defaultRotationResetDuration, vsync: this);
     Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
-      mapController.rotate(_rotationTween.evaluate(animation));
+      mapController.rotate(rotationTween.evaluate(animation));
     });
 
     animation.addStatusListener((status) {
@@ -649,20 +649,20 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
         longitude,
         params: PhotonReverseParams(radius: radius),
       );
-    } on Exception catch (e) {
+    } on Exception {
       result = [];
     }
     return result;
   }
 
   void animatedMapZoom(bool isIncreaseZoom) {
-    final _zoomTween = Tween<double>(begin: mapController.camera.zoom, end: nextZoom(isIncreaseZoom));
+    final zoomTween = Tween<double>(begin: mapController.camera.zoom, end: nextZoom(isIncreaseZoom));
 
     var controller = AnimationController(duration: widget.zoomDuration ?? defaultZoomDuration, vsync: this);
     Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
-      mapController.move(mapController.camera.center, _zoomTween.evaluate(animation));
+      mapController.move(mapController.camera.center, zoomTween.evaluate(animation));
     });
 
     animation.addStatusListener((status) {

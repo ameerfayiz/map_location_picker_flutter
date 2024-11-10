@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:map_location_picker_flutter/map_location_picker_flutter.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -34,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
       MaterialPageRoute(
         builder: (context) => MapLocationPickerV2(
           // Basic configuration
-          initialLocation: LatLng(37.7749, -122.4194),
+          initialLocation: const LatLng(37.7749, -122.4194),
           initialZoom: 12,
           mapTileUrl: "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
 
@@ -49,16 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // Text customization
           searchHintText: "Search location...",
-          labelTextStyle: TextStyle(
+          labelTextStyle: const TextStyle(
             color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.w500,
           ),
 
           // Animation customization
-          mapMoveDuration: Duration(milliseconds: 800),
-          zoomDuration: Duration(milliseconds: 300),
-          rotationResetDuration: Duration(milliseconds: 400),
+          mapMoveDuration: const Duration(milliseconds: 800),
+          zoomDuration: const Duration(milliseconds: 300),
+          rotationResetDuration: const Duration(milliseconds: 400),
           animationCurve: Curves.easeInOutCubic,
 
           // Callbacks
@@ -193,10 +195,10 @@ class LocationResultCard extends StatelessWidget {
   final VoidCallback onClear;
 
   const LocationResultCard({
-    Key? key,
+    super.key,
     required this.location,
     required this.onClear,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/services/text_formatter.dart';
 import 'package:flutter_photon/flutter_photon.dart';
 
-typedef StringCallback(String data);
-typedef InputEventCallback<T>(T data);
+typedef StringCallback = Function(String data);
+typedef InputEventCallback<T> = Function(T data);
 
 class PhotonAutocomplete<T> extends StatefulWidget {
+  @override
   final GlobalKey<PhotonAutocompleteState<T>> key;
   final TextAlign? textAlign;
   final bool clearOnSubmit;
@@ -99,14 +100,14 @@ class PhotonAutocompleteState<T> extends State<PhotonAutocomplete> {
   PhotonAutocompleteState(this.textAlign, this.clearOnSubmit, this.itemBuilder, this.itemSubmitted, this.suggestions, this.textChanged, this.textSubmitted, this.style, this.onFocusChanged, this.decoration, this.controller, this.inputFormatters,
       this.textCapitalization, this.keyboardType, this.textInputAction, this.focusNode, this.textParser) {
     filteredSuggestions = [];
-    textField = new TextField(
+    textField = TextField(
       inputFormatters: inputFormatters,
       textCapitalization: textCapitalization,
       decoration: decoration,
       style: style,
       keyboardType: keyboardType,
-      focusNode: focusNode ?? new FocusNode(),
-      controller: controller ?? new TextEditingController(),
+      focusNode: focusNode ?? FocusNode(),
+      controller: controller ?? TextEditingController(),
       textInputAction: textInputAction,
       onChanged: (newText) {
         currentText = newText;
@@ -154,23 +155,23 @@ class PhotonAutocompleteState<T> extends State<PhotonAutocomplete> {
       final Size textFieldSize = (context.findRenderObject() as RenderBox).size;
       final width = textFieldSize.width;
       final height = textFieldSize.height;
-      listSuggestionsEntry = new OverlayEntry(builder: (context) {
-        return new Positioned(
+      listSuggestionsEntry = OverlayEntry(builder: (context) {
+        return Positioned(
             width: width,
             child: CompositedTransformFollower(
                 link: _layerLink,
                 showWhenUnlinked: false,
                 offset: Offset(0.0, height + 10),
-                child: new SizedBox(
+                child: SizedBox(
                     width: width,
                     height: (filteredSuggestions.length > 6) ? 60 * 5 : null,
                     child: Card(
                         child: SingleChildScrollView(
                             child: Column(
                       children: filteredSuggestions.map((suggestion) {
-                        return new Row(children: [
-                          new Expanded(
-                              child: new InkWell(
+                        return Row(children: [
+                          Expanded(
+                              child: InkWell(
                                   child: itemBuilder!(context, suggestion),
                                   onTap: () {
                                     setState(() {
@@ -184,7 +185,7 @@ class PhotonAutocompleteState<T> extends State<PhotonAutocomplete> {
                       }).toList(),
                     ))))));
       });
-      Overlay.of(context)!.insert(listSuggestionsEntry!);
+      Overlay.of(context).insert(listSuggestionsEntry!);
     }
 
     filteredSuggestions = await getSuggestionsCancellable(query);
@@ -228,7 +229,7 @@ class PhotonAutocompleteState<T> extends State<PhotonAutocomplete> {
                   clear();
                 }),
               },
-              icon: Icon(Icons.clear, color: Colors.blueGrey),
+              icon: const Icon(Icons.clear, color: Colors.blueGrey),
             ),
           ],
         ));

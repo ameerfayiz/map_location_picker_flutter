@@ -17,11 +17,11 @@ class MapLocationPicker extends StatefulWidget {
   final LatLng? initialLocation;
   final double? initialZoom;
 
-  const MapLocationPicker({Key? key, this.initialLocation, this.initialZoom}) : super(key: key);
+  const MapLocationPicker({super.key, this.initialLocation, this.initialZoom});
 
   @override
-  State<StatefulWidget> createState() => new MapLocationPickerState(
-        initialLocation ?? LatLng(12.975788790299323, 77.58728327670923),
+  State<StatefulWidget> createState() => MapLocationPickerState(
+        initialLocation ?? const LatLng(12.975788790299323, 77.58728327670923),
         initialZoom ?? 10,
       );
 }
@@ -86,7 +86,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
     super.initState();
     mapController = MapController();
     searchController = TextEditingController();
-    _placeDetails = new StreamController<String>();
+    _placeDetails = StreamController<String>();
     _locationResult = LocationResult();
   }
 
@@ -150,13 +150,13 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
   }
 
   void animatedMapZoom(bool isIncreaseZoom) {
-    final _zoomTween = Tween<double>(begin: mapController.camera.zoom, end: nextZoom(isIncreaseZoom));
+    final zoomTween = Tween<double>(begin: mapController.camera.zoom, end: nextZoom(isIncreaseZoom));
 
     var controller = AnimationController(duration: const Duration(milliseconds: zoomDurationMillis), vsync: this);
     Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
-      mapController.move(mapController.camera.center, _zoomTween.evaluate(animation));
+      mapController.move(mapController.camera.center, zoomTween.evaluate(animation));
     });
 
     animation.addStatusListener((status) {
@@ -170,12 +170,12 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
   }
 
   void animatedMapRotationReset() {
-    final _rotationTween = Tween<double>(begin: transform360to180(mapController.camera.rotation % 360), end: 0);
+    final rotationTween = Tween<double>(begin: transform360to180(mapController.camera.rotation % 360), end: 0);
     var controller = AnimationController(duration: const Duration(milliseconds: rotationResetDurationMillis), vsync: this);
     Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
-      mapController.rotate(_rotationTween.evaluate(animation));
+      mapController.rotate(rotationTween.evaluate(animation));
     });
 
     animation.addStatusListener((status) {
@@ -197,9 +197,9 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
   void animatedMapMove(LatLng destLocation, double destZoom) {
     // Create some tweens. These serve to split up the transition from one location to another.
     // In our case, we want to split the transition be<tween> our current map center and the destination.
-    final _latTween = Tween<double>(begin: mapController.camera.center.latitude, end: destLocation.latitude);
-    final _lngTween = Tween<double>(begin: mapController.camera.center.longitude, end: destLocation.longitude);
-    final _zoomTween = Tween<double>(begin: mapController.camera.zoom, end: destZoom);
+    final latTween = Tween<double>(begin: mapController.camera.center.latitude, end: destLocation.latitude);
+    final lngTween = Tween<double>(begin: mapController.camera.center.longitude, end: destLocation.longitude);
+    final zoomTween = Tween<double>(begin: mapController.camera.zoom, end: destZoom);
 
     // Create a animation controller that has a duration and a TickerProvider.
     var controller = AnimationController(duration: const Duration(milliseconds: mapMoveDurationMillis), vsync: this);
@@ -208,7 +208,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
     Animation<double> animation = CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
-      mapController.move(LatLng(_latTween.evaluate(animation), _lngTween.evaluate(animation)), _zoomTween.evaluate(animation));
+      mapController.move(LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)), zoomTween.evaluate(animation));
     });
 
     animation.addStatusListener((status) {
@@ -241,7 +241,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
         longitude,
         params: PhotonReverseParams(radius: radius),
       );
-    } on Exception catch (e) {
+    } on Exception {
       result = [];
     }
     return result;
@@ -274,21 +274,21 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                   setState(() {
                     mapControllerRotationRad = transform360to180(mapController.camera.rotation % 360) * 0.01745329252;
                   });
-                  print("LOCATION : ${position.center!.longitude}, ${position.center!.latitude}");
+                  print("LOCATION : ${position.center.longitude}, ${position.center.latitude}");
                   _placeDetails.add("Loading...");
                   isLoading = true;
-                  _locationResult.coordinates = (LatLng(position.center!.latitude, position.center!.longitude));
-                  List<PhotonFeature> places = await getPlaceDetailsCancellable(position.center!.latitude, position.center!.longitude, radius: 10);
+                  _locationResult.coordinates = (LatLng(position.center.latitude, position.center.longitude));
+                  List<PhotonFeature> places = await getPlaceDetailsCancellable(position.center.latitude, position.center.longitude, radius: 10);
                   isLoading = false;
                   if (places.isNotEmpty) {
                     PhotonFeature place = places.first;
                     _locationResult.nearBy = place;
-                    _placeDetails.add("${getLocationLabel(place)}");
-                    places.forEach((place) {
+                    _placeDetails.add(getLocationLabel(place));
+                    for (var place in places) {
                       print("${place.name} ,${place.coordinates.latitude},${place.coordinates.longitude}, ${place.street},${place.city},${place.county},${place.district},${place.state}\n");
-                    });
+                    }
                   } else {
-                    _placeDetails.add("Unknown Location : ${position.center!.latitude} ,  ${position.center!.longitude}");
+                    _placeDetails.add("Unknown Location : ${position.center.latitude} ,  ${position.center.longitude}");
                   }
                 });
               },
@@ -301,10 +301,10 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                 markers: markers,
               ),
               // Custom location marker
-              Center(
+              const Center(
                 child: AnimatedStaticWidget(
                   child: Stack(
-                    children: const [
+                    children: [
                       Icon(
                         Icons.location_on,
                         size: 100,
@@ -337,8 +337,8 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                         }
                         Navigator.pop(context, null);
                       },
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 10),
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 10),
                         child: Icon(
                           Icons.arrow_back_ios,
                           size: 30,
@@ -371,7 +371,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                     Expanded(
@@ -379,7 +379,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                         alignment: Alignment.centerLeft,
                         padding: const EdgeInsets.only(left: labelRoundness, right: 13),
                         height: labelHeight,
-                        decoration: BoxDecoration(color: Colors.blueGrey.withAlpha(200), borderRadius: BorderRadius.only(topLeft: Radius.circular(labelRoundness), bottomLeft: Radius.circular(labelRoundness))),
+                        decoration: BoxDecoration(color: Colors.blueGrey.withAlpha(200), borderRadius: const BorderRadius.only(topLeft: Radius.circular(labelRoundness), bottomLeft: Radius.circular(labelRoundness))),
                         child: StreamBuilder<String>(
                           stream: _placeDetails.stream,
                           builder: (context, snapshot) {
@@ -415,14 +415,14 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 2,
                     ),
                     Column(
                       children: [
                         PhysicalModel(
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(labelRoundness), topLeft: Radius.circular(labelRoundness)),
-                          color: Color(0xFF20292E),
+                          borderRadius: const BorderRadius.only(topRight: Radius.circular(labelRoundness), topLeft: Radius.circular(labelRoundness)),
+                          color: const Color(0xFF20292E),
                           child: InkWell(
                             onTap: () {
                               animatedMapZoom(true);
@@ -436,12 +436,12 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 2,
                         ),
                         PhysicalModel(
-                          borderRadius: BorderRadius.only(bottomRight: Radius.circular(labelRoundness), bottomLeft: Radius.circular(labelRoundness)),
-                          color: Color(0xFF20292E),
+                          borderRadius: const BorderRadius.only(bottomRight: Radius.circular(labelRoundness), bottomLeft: Radius.circular(labelRoundness)),
+                          color: const Color(0xFF20292E),
                           child: InkWell(
                             onTap: () {
                               animatedMapZoom(false);
@@ -455,12 +455,12 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         FloatingActionButton(
                           heroTag: "mapRotation" /*No L10n*/,
-                          backgroundColor: Color(0xFF20292E),
+                          backgroundColor: const Color(0xFF20292E),
                           foregroundColor: Colors.blueGrey.shade50,
                           onPressed: () {
                             setState(() {
@@ -475,18 +475,18 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                               builder: (BuildContext context, double rotation, Widget? child) {
                                 return Transform.rotate(
                                     angle: rotation,
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.navigation,
                                       size: 30,
                                     ));
                               }),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         FloatingActionButton(
                           heroTag: "myLocation" /*No L10n*/,
-                          backgroundColor: Color(0xFF20292E),
+                          backgroundColor: const Color(0xFF20292E),
                           foregroundColor: Colors.blueGrey.shade50,
                           onPressed: () {
                             _liveUpdate = !_liveUpdate;
@@ -494,36 +494,36 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                               gotoMyLocation();
                             }
                           },
-                          child: Icon(Icons.my_location),
+                          child: const Icon(Icons.my_location),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 10,
                         ),
                         ConstrainedBox(
-                          constraints: BoxConstraints.tightFor(width: 56, height: labelHeight),
+                          constraints: const BoxConstraints.tightFor(width: 56, height: labelHeight),
                           child: ElevatedButton(
-                              child: Icon(
-                                Icons.check,
-                                color: Colors.white,
-                              ),
                               style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Color(0xFF20292E)),
-                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                  backgroundColor: WidgetStateProperty.all(const Color(0xFF20292E)),
+                                  shape: WidgetStateProperty.all<RoundedRectangleBorder>(const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.only(topRight: Radius.circular(labelRoundness), bottomRight: Radius.circular(labelRoundness)),
                                   ))),
                               onPressed: () => {
                                     if (_locationResult.coordinates != null && isLoading == false) //&& _locationResult.nearBy != null)
                                       {Navigator.pop(context, _locationResult)}
-                                  }),
+                                  },
+                              child: const Icon(
+                                Icons.check,
+                                color: Colors.white,
+                              )),
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     )
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 )
               ],
@@ -536,7 +536,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
 }
 
 class HorizontalLineLayer extends StatelessWidget {
-  const HorizontalLineLayer({Key? key}) : super(key: key);
+  const HorizontalLineLayer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -550,14 +550,14 @@ class HorizontalLineLayer extends StatelessWidget {
 }
 
 class LocationMarkerLayer extends StatelessWidget {
-  const LocationMarkerLayer({Key? key}) : super(key: key);
+  const LocationMarkerLayer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: AnimatedStaticWidget(
         child: Stack(
-          children: const [
+          children: [
             Icon(
               Icons.location_on,
               size: 100,

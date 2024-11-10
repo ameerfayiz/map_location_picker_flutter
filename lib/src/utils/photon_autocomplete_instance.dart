@@ -21,28 +21,27 @@ RichText getLocationLabelRich(PhotonFeature suggestion) {
     text: TextSpan(
       style: TextStyle(fontSize: 30, color: Colors.blueGrey[500]),
       children: <TextSpan>[
-        (suggestion.name != null) ? TextSpan(text: suggestion.name! + " • ", style: TextStyle(fontSize: 35, color: Colors.blue)) : TextSpan(),
-        (suggestion.street != null) ? TextSpan(text: suggestion.street! + " • ", style: TextStyle()) : TextSpan(),
-        (suggestion.city != null) ? TextSpan(text: suggestion.city! + " • ", style: TextStyle()) : TextSpan(),
-        (suggestion.county != null) ? TextSpan(text: suggestion.county! + " • ", style: TextStyle()) : TextSpan(),
-        (suggestion.district != null) ? TextSpan(text: suggestion.district! + " • ", style: TextStyle()) : TextSpan(),
-        (suggestion.state != null) ? TextSpan(text: suggestion.state! + " • ", style: TextStyle()) : TextSpan(),
-        (suggestion.country != null) ? TextSpan(text: suggestion.country, style: TextStyle(fontWeight: FontWeight.bold)) : TextSpan(),
+        (suggestion.name != null) ? TextSpan(text: "${suggestion.name!} • ", style: const TextStyle(fontSize: 35, color: Colors.blue)) : const TextSpan(),
+        (suggestion.street != null) ? TextSpan(text: "${suggestion.street!} • ", style: const TextStyle()) : const TextSpan(),
+        (suggestion.city != null) ? TextSpan(text: "${suggestion.city!} • ", style: const TextStyle()) : const TextSpan(),
+        (suggestion.county != null) ? TextSpan(text: "${suggestion.county!} • ", style: const TextStyle()) : const TextSpan(),
+        (suggestion.district != null) ? TextSpan(text: "${suggestion.district!} • ", style: const TextStyle()) : const TextSpan(),
+        (suggestion.state != null) ? TextSpan(text: "${suggestion.state!} • ", style: const TextStyle()) : const TextSpan(),
+        (suggestion.country != null) ? TextSpan(text: suggestion.country, style: const TextStyle(fontWeight: FontWeight.bold)) : const TextSpan(),
         //(suggestion.postcode != null) ? TextSpan(text: "Pin: ${suggestion.postcode}", style: TextStyle(fontStyle: FontStyle.italic)):TextSpan(),
       ],
-    ),
-    textScaleFactor: 0.5,
+    ), textScaler: const TextScaler.linear(0.5),
   );
 }
 
 String getLocationLabel(PhotonFeature suggestion, {bool newLineBeforeState = false}) {
   String locationLabel = "";
-  locationLabel += (suggestion.name != null) ? suggestion.name! + ", " : "";
-  locationLabel += (suggestion.street != null) ? suggestion.street! + ", " : "";
-  locationLabel += (suggestion.city != null) ? suggestion.city! + ", " : "";
-  locationLabel += (suggestion.county != null) ? suggestion.county! + ", " : "";
-  locationLabel += (suggestion.district != null) ? suggestion.district! + ", " : "";
-  locationLabel += (suggestion.state != null) ? suggestion.state! + ", " : "";
+  locationLabel += (suggestion.name != null) ? "${suggestion.name!}, " : "";
+  locationLabel += (suggestion.street != null) ? "${suggestion.street!}, " : "";
+  locationLabel += (suggestion.city != null) ? "${suggestion.city!}, " : "";
+  locationLabel += (suggestion.county != null) ? "${suggestion.county!}, " : "";
+  locationLabel += (suggestion.district != null) ? "${suggestion.district!}, " : "";
+  locationLabel += (suggestion.state != null) ? "${suggestion.state!}, " : "";
   locationLabel += (suggestion.country != null) ? suggestion.country! : "";
   //locationLabel += (suggestion.postcode != null) ? ", Pin: ${suggestion.postcode}" : "";
   return locationLabel;
@@ -83,13 +82,13 @@ Widget photonAutocomplete({
         decoration: InputDecoration(
           counterText: '',
           labelText: label ?? '',
-          labelStyle: TextStyle(color: Colors.black45, fontSize: 18),
+          labelStyle: const TextStyle(color: Colors.black45, fontSize: 18),
           floatingLabelBehavior: FloatingLabelBehavior.never,
           // fillColor: Colors.black12,
           // filled: true,
           contentPadding: const EdgeInsets.fromLTRB(15, 10, 15, 0),
           isDense: true,
-          border: OutlineInputBorder(),
+          border: const OutlineInputBorder(),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide.none,

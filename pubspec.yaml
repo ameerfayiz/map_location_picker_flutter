@@ -1,6 +1,6 @@
 name: map_location_picker_flutter
 description: "A versatile Flutter package that provides an elegant location selection interface using OpenStreetMap, featuring automatic address detection and reverse geocoding capabilities."
-version: 0.0.1
+version: 1.0.0
 homepage: https://github.com/ameerfayiz/map_location_picker_flutter
 
 environment:
@@ -15,6 +15,7 @@ dependencies:
   latlong2: ^0.9.1
   location: ^7.0.1
 
+  async: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
