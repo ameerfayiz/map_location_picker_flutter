@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // Basic configuration
           initialLocation: LatLng(37.7749, -122.4194),
           initialZoom: 12,
+          mapTileUrl: "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png",
 
           // UI customization
           primaryColor: Colors.blue,

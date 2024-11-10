@@ -45,17 +45,6 @@ dependencies:
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /><uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /></manifest>
 ```
 
-2. Set the minimum SDK version in `android/app/build.gradle`:
-
-```gradle
-android {
-    defaultConfig {
-        minSdkVersion 20
-        ...
-    }
-}
-```
-
 #### iOS Configuration 🍎
 
 1. Add the following keys to your `ios/Runner/Info.plist`:
@@ -171,6 +160,14 @@ print("Searching for: $text");
 | `mapMoveDuration`    | `Duration` | Duration of map animations         |
 | `onLocationSelected` | `Function` | Callback when location is selected |
 | `onMapMove`          | `Function` | Callback when map is moved         |
+
+you can choose different tile providers from the given list : https://wiki.openstreetmap.org/wiki/Raster_tile_providers
+to change tile provider, please change 'mapTileUrl' parameter in MapLocationPicker like : 
+```
+mapTileUrl: "https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+```
+
+
 
 ## Example App 📱
 
