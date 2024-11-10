@@ -103,7 +103,7 @@ void main() {
 ### 4. Advanced Usage 🛠️
 
 ```dart
-MapLocationPicker
+MapLocationPickerV2
 (
 // Map configuration
 initialLocation: LatLng(37.7749, -122.4194),
