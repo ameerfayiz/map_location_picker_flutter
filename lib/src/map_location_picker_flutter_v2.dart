@@ -513,9 +513,9 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
 
   void _handleSearchItemSubmitted(PhotonFeature photonFeature) {
     print("Location selected: ${photonFeature.name}");
-    animatedMapMove(photonFeature.coordinates, 16);
+    animatedMapMove(LatLng(photonFeature.coordinates.latitude.toDouble(), photonFeature.coordinates.longitude.toDouble()), 16);
     if (widget.onLocationSelected != null) {
-      _locationResult.coordinates = photonFeature.coordinates;
+      _locationResult.coordinates = LatLng(photonFeature.coordinates.latitude.toDouble(), photonFeature.coordinates.longitude.toDouble());
       _locationResult.nearBy = photonFeature;
       widget.onLocationSelected!(_locationResult);
     }
@@ -647,7 +647,7 @@ class MapLocationPickerV2State extends State<MapLocationPickerV2> with TickerPro
       result = await api.reverseSearch(
         latitude,
         longitude,
-        radius: radius,
+        params: PhotonReverseParams(radius: radius),
       );
     } on Exception catch (e) {
       result = [];

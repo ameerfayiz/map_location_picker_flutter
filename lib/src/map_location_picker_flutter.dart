@@ -239,7 +239,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
       result = await api.reverseSearch(
         latitude,
         longitude,
-        radius: radius,
+        params: PhotonReverseParams(radius: radius),
       );
     } on Exception catch (e) {
       result = [];
@@ -352,7 +352,7 @@ class MapLocationPickerState extends State<MapLocationPicker> with TickerProvide
                         controller: searchController,
                         itemSubmitted: (PhotonFeature photonFeature) {
                           print("Item Submitted totally (name) : ${photonFeature.name}"); //No L10n
-                          animatedMapMove(photonFeature.coordinates, 16);
+                          animatedMapMove(LatLng(photonFeature.coordinates.latitude.toDouble(),photonFeature.coordinates.longitude.toDouble()), 16);
                         },
                         textChanged: (text) => {},
                         fontSize: 20.0,
