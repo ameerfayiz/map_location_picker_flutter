@@ -7,9 +7,11 @@
 
 A highly customizable Flutter package for picking locations on a map. Features OpenStreetMap integration, reverse geocoding, search functionality, and a beautiful UI with smooth animations.
 
-![Map Location Picker 1](https://raw.githubusercontent.com/ameerfayiz/map_location_picker_flutter/refs/heads/master/images/Screenshot_1.png)
-![Map Location Picker 2](https://raw.githubusercontent.com/ameerfayiz/map_location_picker_flutter/refs/heads/master/images/Screenshot_2.png)
-![Map Location Picker 3](https://raw.githubusercontent.com/ameerfayiz/map_location_picker_flutter/refs/heads/master/images/Screenshot_3.png)
+<p float="left">
+  <img src="https://raw.githubusercontent.com/ameerfayiz/map_location_picker_flutter/refs/heads/master/images/Screenshot_1.png" width="32%" />
+  <img src="https://raw.githubusercontent.com/ameerfayiz/map_location_picker_flutter/refs/heads/master/images/Screenshot_2.png" width="32%" /> 
+  <img src="https://raw.githubusercontent.com/ameerfayiz/map_location_picker_flutter/refs/heads/master/images/Screenshot_3.png" width="32%" />
+</p>
 
 ## Features 🚀
 
